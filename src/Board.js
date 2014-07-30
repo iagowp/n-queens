@@ -138,12 +138,35 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var row = 0;
+      var column = majorDiagonalColumnIndexAtFirstRow;
+      while(column < 0){
+        row++;
+        column++;
+
+      }
+      var queen = 0;
+      for(; row < this.attributes.n; row++, column++){
+        if(this.attributes[row][column] === 1){
+          queen++;
+          if(queen > 1){
+            return true;
+          }
+        }
+      }
+      return false;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      var iterations = (this.attributes.n - 1) * 2 - 1;
+      var limit = (iterations - 1) / 2;
+      for(var i = -limit; i <= limit; i++){
+        if(this.hasMajorDiagonalConflictAt(i)){
+          return true;
+        }
+      }
+      return false;
     },
 
 
