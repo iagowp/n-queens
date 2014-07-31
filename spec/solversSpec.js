@@ -51,6 +51,9 @@ describe('solvers', function() {
       });
     });
 
+    it('benchmark', function () {
+      countNQueensSolutions(13);
+    });
   });
 
 });
