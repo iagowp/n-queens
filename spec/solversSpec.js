@@ -53,6 +53,7 @@ describe('solvers', function() {
 
     it('benchmark', function () {
       countNQueensSolutions(13);
+      // 4585ms
     });
   });
 

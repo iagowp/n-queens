@@ -70,7 +70,7 @@ window.findNQueensSolution = function(n) {
     }
     for(i = 0; i < board.attributes.n; i++){
       board.attributes[rowIndex][i] = 1;
-      if(!board.hasAnyColConflicts()){
+      if(!board.hasColConflictAt(i)){
         var row = rowIndex;
         var column = i;
         while(row !== 0){
@@ -107,6 +107,9 @@ window.findNQueensSolution = function(n) {
 window.countNQueensSolutions = function(n) {
   var solutionCount = 0;
   var board = new Board({n:n});
+  var colConflict = {};
+  var majorDiagConflict = {};
+  var minorDiagConflict = {};
 
   var count = function(rowIndex){
     if(rowIndex >= n){
@@ -114,27 +117,35 @@ window.countNQueensSolutions = function(n) {
       return;
     }
     for(var i = 0; i < n; i++){
-      board.attributes[rowIndex][i] = 1;
-      if(!board.hasAnyColConflicts()){
-        var row = rowIndex;
-        var column = i;
-        while(row !== 0){
-          row--;
-          column--;
+      if(!colConflict[i]){
+        var row1 = rowIndex;
+        var column1 = i;
+        while(row1 !== 0){
+          row1--;
+          column1--;
         }
-        if(!board.hasMajorDiagonalConflictAt(column)){
-          row = rowIndex;
-          column = i;
-          while(row !== 0){
-            row--;
-            column++;
+        if(!majorDiagConflict[column1]){
+          var row2 = rowIndex;
+          var column2 = i;
+          while(row2 !== 0){
+            row2--;
+            column2++;
           }
-          if(!board.hasMinorDiagonalConflictAt(column)){
+          if(!minorDiagConflict[column2]){
+            board.attributes[rowIndex][i] = 1;
+            colConflict[i] = true;
+            majorDiagConflict[column1] = true;
+            minorDiagConflict[column2] = true;
+
             count(rowIndex+1);
+
+            colConflict[i] = false;
+            majorDiagConflict[column1] = false;
+            minorDiagConflict[column2] = false;
+            board.attributes[rowIndex][i] = 0;
           }
         }
       }
-      board.attributes[rowIndex][i] = 0;
     }
 
   };
@@ -143,43 +154,3 @@ window.countNQueensSolutions = function(n) {
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
