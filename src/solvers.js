@@ -106,13 +106,9 @@ window.findNQueensSolution = function(n) {
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
   var solutionCount = 0;
-  var board = new Array(n);
-  for(var i = 0; i < n; i++){
-    board[i]= new Array(n);
-  }
-  var colConflict = {};
-  var majorDiagConflict = {};
-  var minorDiagConflict = {};
+  var colConflict = [];
+  var majorDiagConflict = [];
+  var minorDiagConflict = [];
 
   var count = function(rowIndex){
     if(rowIndex >= n){
@@ -121,21 +117,13 @@ window.countNQueensSolutions = function(n) {
     }
     for(var i = 0; i < n; i++){
       if(!colConflict[i]){
-        var row1 = rowIndex;
         var column1 = i;
-        while(row1 !== 0){
-          row1--;
-          column1--;
-        }
+        column1 -= rowIndex;
+        column1 += (n - 1);
         if(!majorDiagConflict[column1]){
-          var row2 = rowIndex;
           var column2 = i;
-          while(row2 !== 0){
-            row2--;
-            column2++;
-          }
+          column2 += rowIndex;
           if(!minorDiagConflict[column2]){
-            board[rowIndex][i] = 1;
             colConflict[i] = true;
             majorDiagConflict[column1] = true;
             minorDiagConflict[column2] = true;
@@ -145,7 +133,6 @@ window.countNQueensSolutions = function(n) {
             colConflict[i] = false;
             majorDiagConflict[column1] = false;
             minorDiagConflict[column2] = false;
-            board[rowIndex][i] = 0;
           }
         }
       }
@@ -157,3 +144,16 @@ window.countNQueensSolutions = function(n) {
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
+
+  var setBit = function(n, index){
+    var mask = 1 << index;
+    n = n || mask;
+    return n;
+  }
+
+  var clearBit = function(n, index){
+    var mask = 1 << index;
+    mask = ~mask;
+    n = n && mask;
+    return n;
+  }
